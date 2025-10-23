@@ -1,0 +1,87 @@
+- Data from excel needs to import into percentages by a 1 decimal range (1.5%, 1.7%, etc)
+- Add config for not just using total values
+- pie charts need to be donut charts
+- issues with Q8 - Q9 
+- The solution involves using the modified labels but adding them as custom data labels to an invisible set of columns below the axis or lowest value. 
+- add a footnote
+- Need to be able to choose values to chart not just total
+
+
+ChartConfigUI (main class)
+│
+├── __init__(root)
+│   ├── Variables (excel_path, template_path, output_path, starting_slide, chart_selections, etc.)
+│   ├── setup_ui()
+│   └── load_excel_info()
+│
+├── setup_ui()
+│   ├── Main window
+│   │   ├── Canvas + Scrollbar
+│   │   └── Main Frame
+│   │       ├── Title Label
+│   │       ├── File Configuration Frame
+│   │       │   ├── Excel file (entry + browse button)
+│   │       │   ├── Template file (entry + browse button)
+│   │       │   ├── Output file (entry + save as button)
+│   │       │   └── Starting Slide config + Refresh button
+│   │       ├── Info Frame (Excel data analysis results)
+│   │       ├── Chart Configuration Frame (per-sheet chart type selection)
+│   │       ├── Batch Operations Frame (enable/disable, set chart types in bulk)
+│   │       └── Action Buttons (Preview, Generate, Exit)
+│
+├── browse_excel(), browse_template(), browse_output()
+│   └── File dialogs for user input
+│
+├── load_excel_info()
+│   ├── Reads Excel (pandas)
+│   ├── Validates each sheet
+│   ├── Updates info label
+│   └── Calls create_dynamic_selectors()
+│
+├── create_dynamic_selectors()
+│   ├── Clears old selectors
+│   ├── Creates scrollable list of sheets
+│   │   ├── Include (checkbox)
+│   │   ├── Sheet name + valid/invalid status
+│   │   ├── Data info
+│   │   ├── Chart type dropdown
+│   │   └── Slide number label
+│   └── Calls update_slide_numbers()
+│
+├── update_slide_numbers() – keeps slide numbering consistent
+├── enable_all_sheets(), disable_all_sheets()
+├── set_all_charts(type), set_mixed_charts(), set_random_charts()
+├── get_enabled_sheets() – returns a list of enabled sheets + settings
+│
+├── preview_settings()
+│   ├── Builds preview text
+│   └── Calls show_preview_dialog()
+│
+├── show_preview_dialog()
+│   ├── New window with preview text
+│   ├── Buttons (Generate Now, Close)
+│
+├── generate_ppt()
+│   ├── Progress window (progress bar + labels)
+│   └── Calls create_powerpoint()
+│
+├── create_powerpoint()
+│   ├── Loads Excel + PPT template
+│   ├── Loops through enabled sheets:
+│   │   ├── Cleans data
+│   │   ├── Adds new slide
+│   │   ├── Adds chart + title
+│   │   └── Calls format_chart()
+│   └── Saves PowerPoint
+│
+└── format_chart()
+    ├── Applies formatting (legends, labels, axes, colors)
+    └── Adjusts chart type-specific settings
+
+Main Program
+│
+├── main()
+│   ├── Create Tk root
+│   ├── Initialize ChartConfigUI
+│   ├── Center window
+│   └── Start mainloop()
